@@ -8,7 +8,7 @@ def get_db_connection():
     conn = mysql.connector.connect(
         host='127.0.0.1',
         user='root',
-        password='jeff',
+        password='Buch_159753',
         database='gerenciador_contatos'
     )
     return conn
@@ -28,6 +28,19 @@ def add_contact():
     cursor.close()
     conn.close()
     return 'Contato adicionado com sucesso!'
+
+@app.route('/edit_contact', methods=['POST'])
+def edit_contact():
+    contato_id = request.form['id']
+    novo_nome = request.form['novo_nome']
+    novo_email = request.form['novo_email']
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE contatos SET nome = %s, email = %s WHERE id = %s', (novo_nome, novo_email, contato_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return 'Contato editado com sucesso!'
 
 if __name__ == '__main__':
     app.run(debug=True)
