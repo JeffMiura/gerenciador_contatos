@@ -8,7 +8,7 @@ def get_db_connection():
     conn = mysql.connector.connect(
         host='127.0.0.1',
         user='root',
-        password='Buch_159753',
+        password='bd_123', 
         database='gerenciador_contatos'
     )
     return conn
@@ -41,6 +41,28 @@ def edit_contact():
     cursor.close()
     conn.close()
     return 'Contato editado com sucesso!'
+
+@app.route('/remove_contact', methods=['POST'])
+def remove_contact():
+    contato_id = request.form['id']
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM contatos WHERE id = %s', (contato_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return 'Contato removido com sucesso!'
+
+@app.route('/favorite_contact', methods=['POST'])
+def favorite_contact():
+    contato_id = request.form['id']
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE contatos SET favorito = TRUE WHERE id = %s', (contato_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return 'Contato marcado como favorito!'
 
 if __name__ == '__main__':
     app.run(debug=True)
